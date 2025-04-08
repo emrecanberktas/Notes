@@ -39,6 +39,8 @@ function App() {
 
   const pageNotes = notes.filter((note) => note.url === currentUrl);
 
+  console.log(pageNotes);
+
   const handleAddNote = () => {
     if (selectedText && newNote) {
       addNote({
