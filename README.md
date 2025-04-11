@@ -15,7 +15,7 @@ A Chrome extension that allows users to highlight text on any webpage, add notes
 Follow these steps to set up and use the extension locally:
 
 1. **Clone the Repository**: Clone the project to your local machine using the command: `bash git clone https://github.com/emrecanberktas/Notes.git `
-2. **Navigate to the Project Directory**: Move into the project folder: `bash cd Notes `
-3. **Install Dependencies**: Install the required dependencies by running: `bash npm install `
-4. **Build the Extension**: Create a production-ready build of the extension: `bash npm run build `
+2. **Navigate to the Project Directory**: Move into the project folder: `cd Notes`
+3. **Install Dependencies**: Install the required dependencies by running: `npm install `
+4. **Build the Extension**: Create a production-ready build of the extension: `npm run build `
 5. **Add the Extension to Chrome**: Load the extension in Chrome by following these steps: - Open Chrome and go to the Extensions page by typing `chrome://extensions/` in the address bar or navigating via Menu > Extensions > Manage Extensions. - Enable **Developer mode** by toggling the switch in the top-right corner. - Click the **Load unpacked** button. - Select the `dist` folder (or wherever your build output is located) from the project directory and click **Open**. - The extension should now appear in your Chrome extensions list and be ready to use!
