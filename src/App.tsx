@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./components/ui/card";
+import { Card, CardContent } from "./components/ui/card";
 import { ScrollArea } from "./components/ui/scroll-area";
 import { Button } from "./components/ui/button";
 import { Textarea } from "./components/ui/textarea";
 import { useNotesStore } from "./store/useNotesStore";
-import { formatDistanceToNow } from "date-fns";
+import Popup from "./components/Popup";
 
 function App() {
-  const { notes, deleteNote, addNote } = useNotesStore();
+  const { addNote } = useNotesStore();
   const [currentUrl, setCurrentUrl] = useState<string>("");
   const [newNote, setNewNote] = useState("");
   const [selectedText, setSelectedText] = useState<{
@@ -37,10 +31,6 @@ function App() {
     });
   }, []);
 
-  const pageNotes = notes.filter((note) => note.url === currentUrl);
-
-  console.log(pageNotes);
-
   const handleAddNote = () => {
     if (selectedText && newNote) {
       addNote({
@@ -57,10 +47,6 @@ function App() {
   return (
     <div className="w-[400px] p-4">
       <Card>
-        <CardHeader>
-          <CardTitle>Page Notes</CardTitle>
-          <CardDescription>Your notes for this page</CardDescription>
-        </CardHeader>
         <CardContent>
           {selectedText && (
             <div className="mb-4 space-y-2">
@@ -85,40 +71,7 @@ function App() {
           )}
 
           <ScrollArea className="h-[300px]">
-            {pageNotes.length === 0 ? (
-              <p className="text-center text-muted-foreground">
-                No notes for this page yet
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {pageNotes.map((note) => (
-                  <Card key={note.id}>
-                    <CardContent className="p-4">
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-1">
-                          <p className="text-sm font-medium">{note.text}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {note.note}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {formatDistanceToNow(note.timestamp, {
-                              addSuffix: true,
-                            })}
-                          </p>
-                        </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deleteNote(note.id)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
+            <Popup />
           </ScrollArea>
         </CardContent>
       </Card>
