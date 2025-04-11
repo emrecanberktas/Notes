@@ -1,5 +1,4 @@
 declare const chrome: any;
-import { v4 as uuidv4 } from "uuid";
 
 // function getXPath(element: Node): string {
 //   if (!element.parentNode) return "";
@@ -189,31 +188,38 @@ document.addEventListener("click", (e) => {
     closeButton?.addEventListener("click", closeDialog);
     cancelButton?.addEventListener("click", closeDialog);
 
-    saveButton?.addEventListener("click", () => {
+    const getStorage = (key: string) =>
+      new Promise<string>((resolve) =>
+        chrome.storage.sync.get([key], (result: any) =>
+          resolve(result[key] as string)
+        )
+      );
+    const setStorage = (data: Record<string, any>) =>
+      new Promise<void>((resolve) =>
+        chrome.storage.sync.set(data, () => resolve())
+      );
+
+    saveButton?.addEventListener("click", async () => {
       const note = (textarea as HTMLTextAreaElement)?.value || "";
       if (note.trim()) {
-        chrome.storage.sync.get(["noteIds"], (result: any) => {
-          const noteId = uuidv4();
-          const noteIds = result.noteIds ? JSON.parse(result.noteIds) : [];
-          noteIds.push(noteId);
+        const noteId = crypto.randomUUID();
+        const storedNotes = await getStorage("noteIds");
+        const noteIds = storedNotes ? JSON.parse(storedNotes as string) : [];
+        noteIds.push(noteId);
 
-          const newNote = {
-            id: noteId,
-            text: selectedText,
-            note: note,
-            url: window.location.href,
-            timestamp: new Date().toISOString(),
-          };
+        const newNote = {
+          id: noteId,
+          text: selectedText,
+          note: note,
+          url: window.location.href,
+          timestamp: new Date().toISOString(),
+        };
 
-          noteIds.push(newNote);
-
-          chrome.storage.sync.set(
-            { [noteId]: JSON.stringify(noteIds), note },
-            () => {
-              closeDialog();
-            }
-          );
+        await setStorage({
+          [noteId]: JSON.stringify(newNote),
+          noteIds: JSON.stringify(noteIds),
         });
+        closeDialog();
       } else {
         closeDialog();
       }
