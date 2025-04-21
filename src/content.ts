@@ -188,12 +188,6 @@ document.addEventListener("click", (e) => {
     closeButton?.addEventListener("click", closeDialog);
     cancelButton?.addEventListener("click", closeDialog);
 
-    const getStorage = (key: string) =>
-      new Promise<string>((resolve) =>
-        chrome.storage.sync.get([key], (result: any) =>
-          resolve(result[key] as string)
-        )
-      );
     const setStorage = (data: Record<string, any>) =>
       new Promise<void>((resolve) =>
         chrome.storage.sync.set(data, () => resolve())
@@ -203,9 +197,6 @@ document.addEventListener("click", (e) => {
       const note = (textarea as HTMLTextAreaElement)?.value || "";
       if (note.trim()) {
         const noteId = crypto.randomUUID();
-        const storedNotes = await getStorage("noteIds");
-        const noteIds = storedNotes ? JSON.parse(storedNotes as string) : [];
-        noteIds.push(noteId);
 
         const newNote = {
           id: noteId,
@@ -217,7 +208,6 @@ document.addEventListener("click", (e) => {
 
         await setStorage({
           [noteId]: JSON.stringify(newNote),
-          noteIds: JSON.stringify(noteIds),
         });
         closeDialog();
       } else {
