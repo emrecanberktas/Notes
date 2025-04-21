@@ -52,14 +52,14 @@ const Popup: React.FC = () => {
   };
 
   return (
-    <div className="w-[350px] max-h-[500px] p-3 bg-gray-50">
+    <div className="w-full min-w-[300px] max-w-md h-auto max-h-screen p-3 bg-gray-50">
       <h2 className="text-lg font-semibold text-gray-900 mb-3">Your Notes</h2>
       {notes.length === 0 ? (
         <div className="text-center py-8 bg-white rounded-lg shadow-sm">
           <p className="text-gray-500 text-sm">No notes saved yet</p>
         </div>
       ) : (
-        <div className="space-y-3 overflow-y-auto max-h-[430px] pr-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+        <div className="space-y-3 overflow-y-auto max-h-[70vh] pr-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
           {notes.map((note) => (
             <div
               key={note.id}
@@ -68,7 +68,7 @@ const Popup: React.FC = () => {
               <div className="p-3">
                 <div className="flex items-center text-xs text-gray-500 mb-2">
                   <Calendar className="w-3 h-3 mr-1" />
-                  <span>{formatDate(note.timestamp)}</span>
+                  <span className="truncate">{formatDate(note.timestamp)}</span>
                 </div>
 
                 <div className="space-y-2">
@@ -89,7 +89,7 @@ const Popup: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 px-3 py-2 bg-gray-50 border-t border-gray-100">
+              <div className="flex flex-wrap items-center justify-end gap-2 px-3 py-2 bg-gray-50 border-t border-gray-100">
                 <button
                   onClick={() => openUrl(note.url)}
                   className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 transition-colors"
