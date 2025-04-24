@@ -11,6 +11,8 @@ import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
 
+declare const chrome: any;
+
 interface NoteDialogProps {
   selectedText: string;
   url: string;
@@ -23,33 +25,49 @@ const NoteDialog: React.FC<NoteDialogProps> = ({
   onClose,
 }) => {
   const [note, setNote] = useState("");
+  const [isOpen, setIsOpen] = useState(true);
 
-  const handleSave = () => {
-    const notes = JSON.parse(localStorage.getItem("pageNotes") || "[]");
-    const newNote = {
-      id: Date.now(),
-      text: selectedText,
-      note,
-      url,
-      timestamp: new Date().toISOString(),
-    };
-    notes.push(newNote);
-    localStorage.setItem("pageNotes", JSON.stringify(notes));
+  const handleClose = () => {
+    setIsOpen(false);
     onClose();
   };
 
+  const handleSave = async () => {
+    if (note.trim()) {
+      const noteId = crypto.randomUUID();
+
+      const newNote = {
+        id: noteId,
+        text: selectedText,
+        note,
+        url,
+        timestamp: new Date().toISOString(),
+      };
+
+      await new Promise<void>((resolve) =>
+        chrome.storage.sync.set({ [noteId]: JSON.stringify(newNote) }, () =>
+          resolve()
+        )
+      );
+
+      handleClose();
+    } else {
+      handleClose();
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Note</DialogTitle>
         </DialogHeader>
         <div>
-          <div>
+          <div className="selected-text-container">
             <strong>Selected Text:</strong>
             <p>{selectedText}</p>
           </div>
-          <div>
+          <div className="note-input-container">
             <Label htmlFor="note">Your Note:</Label>
             <Textarea
               id="note"
@@ -61,12 +79,10 @@ const NoteDialog: React.FC<NoteDialogProps> = ({
           </div>
         </div>
         <DialogFooter>
-          <Button className="cancel-button" onClick={onClose}>
+          <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>
-          <Button className="save-button" onClick={handleSave}>
-            Save Note
-          </Button>
+          <Button onClick={handleSave}>Save Note</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
