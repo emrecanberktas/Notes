@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNotesStore } from "../store/useNotesStore";
 import { Trash2, ExternalLink, Calendar, Quote } from "lucide-react";
 
 interface Note {
@@ -12,7 +11,6 @@ interface Note {
 
 const Popup: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
-  const { deleteNote } = useNotesStore();
 
   useEffect(() => {
     chrome.storage.sync.get(null, (result) => {
@@ -46,7 +44,6 @@ const Popup: React.FC = () => {
 
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this note?")) {
-      deleteNote(id);
       setNotes(notes.filter((note) => note.id !== id));
     }
   };
