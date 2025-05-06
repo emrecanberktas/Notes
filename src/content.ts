@@ -1,33 +1,5 @@
 declare const chrome: any;
 
-// function getXPath(element: Node): string {
-//   if (!element.parentNode) return "";
-
-//   let siblings = element.parentNode.childNodes;
-//   let count = 0;
-//   let index = 0;
-
-//   for (let i = 0; i < siblings.length; i++) {
-//     let sibling = siblings[i];
-//     if (sibling === element) {
-//       index = count + 1;
-//       break;
-//     }
-//     if (sibling.nodeType === 1 && sibling.nodeName === element.nodeName) {
-//       count++;
-//     }
-//   }
-
-//   return (
-//     getXPath(element.parentNode) +
-//     "/" +
-//     element.nodeName.toLowerCase() +
-//     "[" +
-//     index +
-//     "]"
-//   );
-// }
-
 let selectedText = "";
 let selectedRange: Range | null = null;
 
