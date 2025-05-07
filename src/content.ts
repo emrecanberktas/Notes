@@ -26,22 +26,33 @@ document.addEventListener("mouseup", () => {
     floatingButton.style.cssText = `
       position: fixed;
       z-index: 10000;
-      padding: 8px 12px;
-      background: #0ea5e9;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 12px;
       cursor: pointer;
-      font-family: system-ui;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: background-color 0.2s;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
     `;
+    floatingButton!.addEventListener("mouseenter", () => {
+      floatingButton!.style.transform = "translateY(-2px)";
+      floatingButton!.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.2)";
+    });
+    floatingButton!.addEventListener("mouseleave", () => {
+      floatingButton!.style.transform = "translateY(0)";
+      floatingButton!.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
+    });
     document.body.appendChild(floatingButton);
   }
 
+  // Get the bounding rectangle of the selection
   const rect = selection.getRangeAt(0).getBoundingClientRect();
-  floatingButton.style.top = `${rect.bottom + window.scrollY + 10}px`;
-  floatingButton.style.left = `${rect.left + window.scrollX}px`;
+  floatingButton.style.top = `${rect.bottom + 10}px`;
+  floatingButton.style.left = `${rect.left}px`;
   floatingButton.style.display = "block";
 });
 
@@ -54,8 +65,12 @@ document.addEventListener("click", (e) => {
       <div class="note-dialog-overlay">
         <div class="note-dialog">
           <div class="note-dialog-header">
-            <h3>Add Note</h3>
-            <button class="close-button">×</button>
+            <h3>Add a Note</h3>
+            <button class="close-button" aria-label="Close dialog">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
           <div class="note-dialog-content">
             <div class="selected-text">
@@ -78,68 +93,149 @@ document.addEventListener("click", (e) => {
     // Add styles
     const style = document.createElement("style");
     style.textContent = `
+      @keyframes dialogFadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
       .note-dialog-overlay {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.6);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 10001;
+        backdrop-filter: blur(2px);
       }
       .note-dialog {
-        background: white;
-        border-radius: 8px;
+        background: #ffffff;
+        border-radius: 16px;
         width: 90%;
-        max-width: 500px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 520px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        animation: dialogFadeIn 0.3s ease forwards;
+        font-family: 'Inter', system-ui, sans-serif;
       }
       .note-dialog-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 16px;
+        padding: 20px 24px;
         border-bottom: 1px solid #e5e7eb;
       }
+      .note-dialog-header h3 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+      .close-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        color: #6b7280;
+        transition: color 0.2s;
+      }
+      .close-button:hover {
+        color: #1f2937;
+      }
       .note-dialog-content {
-        padding: 16px;
+        padding: 24px;
       }
       .selected-text {
-        margin-bottom: 16px;
-        padding: 12px;
-        background: #f3f4f6;
-        border-radius: 4px;
+        margin-bottom: 20px;
+        padding: 16px;
+        background: #f8fafc;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #374151;
+      }
+      .selected-text strong {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #1f2937;
+      }
+      .note-input label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1f2937;
       }
       .note-input textarea {
         width: 100%;
         padding: 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 4px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #374151;
         resize: vertical;
+        transition: border-color 0.2s;
+      }
+      .note-input textarea:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
       }
       .note-dialog-footer {
         display: flex;
         justify-content: flex-end;
         gap: 12px;
-        padding: 16px;
+        padding: 20px 24px;
         border-top: 1px solid #e5e7eb;
       }
       .cancel-button, .save-button {
-        padding: 8px 16px;
-        border-radius: 4px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
         cursor: pointer;
+        transition: all 0.3s ease;
       }
       .cancel-button {
         background: #f3f4f6;
         border: 1px solid #d1d5db;
+        color: #374151;
+      }
+      .cancel-button:hover {
+        background: #e5e7eb;
+        border-color: #9ca3af;
       }
       .save-button {
-        background: #0ea5e9;
+        background: linear-gradient(135deg, #3b82f6, #60a5fa);
         border: none;
         color: white;
+      }
+      .save-button:hover {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+      @media (max-width: 640px) {
+        .note-dialog {
+          width: 95%;
+          margin: 16px;
+        }
+        .note-dialog-header {
+          padding: 16px;
+        }
+        .note-dialog-content {
+          padding: 16px;
+        }
+        .note-dialog-footer {
+          padding: 16px;
+        }
       }
     `;
     document.head.appendChild(style);
