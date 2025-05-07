@@ -1,52 +1,52 @@
-// import { useEffect, useState } from "react";
-// import { Card, CardContent } from "./components/ui/card";
-// import { ScrollArea } from "./components/ui/scroll-area";
-// import { Button } from "./components/ui/button";
-// import { Textarea } from "./components/ui/textarea";
-// import { useNotesStore } from "./store/useNotesStore";
-// import Popup from "./components/Popup";
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "./components/ui/card";
+import { ScrollArea } from "./components/ui/scroll-area";
+import { Button } from "./components/ui/button";
+import { Textarea } from "./components/ui/textarea";
+import { useNotesStore } from "./store/useNotesStore";
+import Popup from "./components/Popup";
 
 function App() {
-  // const { addNote } = useNotesStore();
-  // const [currentUrl, setCurrentUrl] = useState<string>("");
-  // const [newNote, setNewNote] = useState("");
-  // const [selectedText, setSelectedText] = useState<{
-  //   text: string;
-  //   selection: { startOffset: number; endOffset: number; xpath: string };
-  // } | null>(null);
+  const { addNote } = useNotesStore();
+  const [currentUrl, setCurrentUrl] = useState<string>("");
+  const [newNote, setNewNote] = useState("");
+  const [selectedText, setSelectedText] = useState<{
+    text: string;
+    selection: { startOffset: number; endOffset: number; xpath: string };
+  } | null>(null);
 
-  // useEffect(() => {
-  //   // Get current tab URL
-  //   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  //     if (tabs[0]?.url) {
-  //       setCurrentUrl(tabs[0].url);
-  //     }
-  //   });
+  useEffect(() => {
+    // Get current tab URL
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.url) {
+        setCurrentUrl(tabs[0].url);
+      }
+    });
 
-  //   // Listen for messages from content script
-  //   chrome.runtime.onMessage.addListener((message) => {
-  //     if (message.type === "SHOW_NOTE_DIALOG") {
-  //       setSelectedText(message.payload);
-  //     }
-  //   });
-  // }, []);
+    // Listen for messages from content script
+    chrome.runtime.onMessage.addListener((message) => {
+      if (message.type === "SHOW_NOTE_DIALOG") {
+        setSelectedText(message.payload);
+      }
+    });
+  }, []);
 
-  // const handleAddNote = () => {
-  //   if (selectedText && newNote) {
-  //     addNote({
-  //       url: currentUrl,
-  //       text: selectedText.text,
-  //       note: newNote,
-  //       selection: selectedText.selection,
-  //     });
-  //     setNewNote("");
-  //     setSelectedText(null);
-  //   }
-  // };
+  const handleAddNote = () => {
+    if (selectedText && newNote) {
+      addNote({
+        url: currentUrl,
+        text: selectedText.text,
+        note: newNote,
+        selection: selectedText.selection,
+      });
+      setNewNote("");
+      setSelectedText(null);
+    }
+  };
 
   return (
     <div className="w-[400px] p-4">
-      {/* <Card>
+      <Card>
         <CardContent>
           {selectedText && (
             <div className="mb-4 space-y-2">
@@ -74,7 +74,7 @@ function App() {
             <Popup />
           </ScrollArea>
         </CardContent>
-      </Card> */}
+      </Card>
     </div>
   );
 }
