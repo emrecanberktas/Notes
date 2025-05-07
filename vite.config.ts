@@ -9,14 +9,15 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        popup: resolve(__dirname, "index.html"),
-        content: resolve(__dirname, "src/content.tsx"),
+        main: resolve(__dirname, "index.html"),
+        content: resolve(__dirname, "src/content.ts"),
       },
       output: {
-        entryFileNames: "[name].js",
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
-        dir: "dist",
+        entryFileNames: (chunkInfo) => {
+          return chunkInfo.name === "content"
+            ? "content.js"
+            : "assets/[name]-[hash].js";
+        },
       },
     },
     outDir: "dist",
